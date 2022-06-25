@@ -34,7 +34,7 @@ class Robot : public frc::TimedRobot {
   double DzShift(double input, double dz);
   //Function prone to skidding error and stuff(not optimized)
   std::vector<double> encoders_to_coord(double left, double right, double x, double y, double theta);
-
+  std::vector<double> position = {double x, double y, double theta};
   //robot baseline(width between right and left wheels in meters)
   double robotbaseline = 1.0;
 
@@ -86,6 +86,10 @@ std::vector<double> Robot::encoders_to_coord(double left, double right, double x
   double f_x = x + (dcenter * cos(theta));
   double f_y = y + (dcenter * sin(theta));
 
-  std::vector<double> arr = {f_x, f_y, f_theta};
-  return arr;
+  position.at(0) = f_x;
+  position.at(1) = f_y;
+  position.at(2) = f_theta;
+  frc::SmartDashboard::PutNumber("Position X", f_x);
+  frc::SmartDashboard::PutNumber("Position Y", f_y);
+  frc::SmartDashboard::PutNumber("Position theta", f_theta);
 }

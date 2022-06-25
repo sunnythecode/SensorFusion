@@ -28,6 +28,7 @@ void Robot::RobotInit() {
 void Robot::RobotPeriodic() {
   frc::SmartDashboard::PutNumber("lEncoder", lEncoder.GetPosition());
   frc::SmartDashboard::PutNumber("rEncoder", rEncoder.GetPosition());
+  frc::SmartDashboard::PutNumber("", m->vals[0]);
 }
 
 void Robot::AutonomousInit() {}
