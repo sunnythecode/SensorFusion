@@ -9,10 +9,19 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 void Robot::RobotInit() {
-  rev::CANSparkMax* rMotor = new rev::CANSparkMax(rMotorLeaderID, rev::CANSparkMax::MotorType::kBrushless);
-  rev::CANSparkMax* rMotorFollower = new rev::CANSparkMax(rMotorFollowerID, rev::CANSparkMax::MotorType::kBrushless);
-  rev::SparkMaxRelativeEncoder lEncoder = lMotor->GetEncoder();
-  rev::SparkMaxRelativeEncoder rEncoder = rMotor->GetEncoder();
+  m_LL->RestoreFactoryDefaults();
+  m_LF->RestoreFactoryDefaults();
+  m_RL->RestoreFactoryDefaults();
+  m_RF->RestoreFactoryDefaults();
+  
+  m_LL->SetInverted(true);
+  m_LF->Follow(*m_leftLeadMotor, true);
+  m_RL->SetInverted(false);
+  m_RF->Follow(*m_rightLeadMotor, false);
+  
+  
+  
+
   
 }
 
@@ -28,7 +37,7 @@ void Robot::AutonomousPeriodic() {}
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
-  
+  m_drive.ArcadeDrive(controller->GetY(), controller->GetX());
 }
 
 void Robot::DisabledInit() {}
