@@ -1,9 +1,9 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+#include <math.h> 
 #pragma once
-
+#define PI 3.14159265
 #include <string>
 
 #include <frc/TimedRobot.h>
@@ -28,7 +28,11 @@ class Robot : public frc::TimedRobot {
   void TestInit() override;
   void TestPeriodic() override;
   double DzShift(double input, double dz);
+  //Function prone to skidding error and stuff(not optimized)
   double encoders_to_coord(double left, double right, double x, double y, double theta);
+
+  //robot baseline(width between right and left wheels in meters)
+  double robotbaseline = 1.0;
 
   frc::XboxController* controller = new frc::XboxController{0};
   rev::CANSparkMax* m_RL = new rev::CANSparkMax(rMotorLeaderID, rev::CANSparkMax::MotorType::kBrushless);
@@ -64,4 +68,18 @@ double Robot::DzShift(double input, double dz) {
         double out = (m*(fabs(input)-1))+1;
         return -(out * out);
     }
+}
+
+double Robot::encoders_dist_to_coord(double left, double right, double x, double y, double theta) {
+  double dleft = left;
+  double dright = dright;
+  double dcenter = (dleft + dright) / 2;
+  double phi = abs(dleft - dright) / 2;
+
+  double f_theta = phi + theta;
+  double f_x = x + (dcenter * cos(theta));
+  double f_y = y + (dcenter * sin(theta));
+
+  double arr[3] = {f_x, f_y, f_theta};
+  return arr;
 }
