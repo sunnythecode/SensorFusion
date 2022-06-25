@@ -1,0 +1,13 @@
+See file:///C:/Users/Lancer%20Robotics/Downloads/SensorFusion/build/tmp/compileFrcUserProgramLinuxathenaReleaseExecutableFrcUserProgramCpp/output.txt for all output for compileFrcUserProgramLinuxathenaReleaseExecutableFrcUserProgramCpp.
+compiling Robot.cpp successful.
+In file included from C:\Users\Lancer Robotics\Downloads\SensorFusion\src\main\cpp\Robot.cpp:5:0:
+C:\Users\Lancer Robotics\Downloads\SensorFusion\src\main\include/Robot.h: In member function 'double Robot::DzShift(double, double)':
+C:\Users\Lancer Robotics\Downloads\SensorFusion\src\main\include/Robot.h:64:12: warning: unused variable 'speed' [-Wunused-variable]
+     double speed;
+            ^~~~~
+C:\Users\Lancer Robotics\Downloads\SensorFusion\src\main\include/Robot.h: In member function 'std::vector<double> Robot::encoders_to_coord(double, double, double, double, double)':
+C:\Users\Lancer Robotics\Downloads\SensorFusion\src\main\include/Robot.h:81:10: warning: 'dright' is used uninitialized in this function [-Wuninitialized]
+   double dright = dright;
+          ^~~~~~
+
+Finished compileFrcUserProgramLinuxathenaReleaseExecutableFrcUserProgramCpp, see full log file:///C:/Users/Lancer%20Robotics/Downloads/SensorFusion/build/tmp/compileFrcUserProgramLinuxathenaReleaseExecutableFrcUserProgramCpp/output.txt.

@@ -4,10 +4,14 @@
 #include <math.h> 
 #pragma once
 #define PI 3.14159265
+#include <vector>
 #include <string>
-
+#include <frc/Joystick.h>
+#include <frc/XboxController.h>
 #include <frc/TimedRobot.h>
+#include <rev/CANSparkMax.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc/drive/DifferentialDrive.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -29,7 +33,7 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
   double DzShift(double input, double dz);
   //Function prone to skidding error and stuff(not optimized)
-  double encoders_to_coord(double left, double right, double x, double y, double theta);
+  std::vector<double> encoders_to_coord(double left, double right, double x, double y, double theta);
 
   //robot baseline(width between right and left wheels in meters)
   double robotbaseline = 1.0;
@@ -39,11 +43,14 @@ class Robot : public frc::TimedRobot {
   rev::CANSparkMax* m_RF = new rev::CANSparkMax(rMotorFollowerID, rev::CANSparkMax::MotorType::kBrushless);
   rev::CANSparkMax* m_LL = new rev::CANSparkMax(lMotorLeaderID, rev::CANSparkMax::MotorType::kBrushless);
   rev::CANSparkMax* m_LF = new rev::CANSparkMax(lMotorFollowerID, rev::CANSparkMax::MotorType::kBrushless);
-
-
-  frc::DifferentialDrive m_drive = new frc:DifferentialDrive(m_LL, m_RL);
+  
+  frc::DifferentialDrive* m_drive = new frc::DifferentialDrive(*m_LL, *m_RL);
   rev::SparkMaxRelativeEncoder lEncoder = m_LL->GetEncoder();
   rev::SparkMaxRelativeEncoder rEncoder = m_RL->GetEncoder();
+
+
+
+
 
  private:
   frc::SendableChooser<std::string> m_chooser;
@@ -51,7 +58,6 @@ class Robot : public frc::TimedRobot {
   const std::string kAutoNameCustom = "My Auto";
   std::string m_autoSelected;
 };
-
 
 
 double Robot::DzShift(double input, double dz) {
@@ -70,7 +76,7 @@ double Robot::DzShift(double input, double dz) {
     }
 }
 
-double Robot::encoders_dist_to_coord(double left, double right, double x, double y, double theta) {
+std::vector<double> Robot::encoders_to_coord(double left, double right, double x, double y, double theta) {
   double dleft = left;
   double dright = dright;
   double dcenter = (dleft + dright) / 2;
@@ -80,6 +86,6 @@ double Robot::encoders_dist_to_coord(double left, double right, double x, double
   double f_x = x + (dcenter * cos(theta));
   double f_y = y + (dcenter * sin(theta));
 
-  double arr[3] = {f_x, f_y, f_theta};
+  std::vector<double> arr = {f_x, f_y, f_theta};
   return arr;
 }

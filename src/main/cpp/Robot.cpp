@@ -15,9 +15,9 @@ void Robot::RobotInit() {
   m_RF->RestoreFactoryDefaults();
   
   m_LL->SetInverted(true);
-  m_LF->Follow(*m_leftLeadMotor, true);
+  m_LF->Follow(*m_LL, true);
   m_RL->SetInverted(false);
-  m_RF->Follow(*m_rightLeadMotor, false);
+  m_RF->Follow(*m_RL, false);
   
   
   
@@ -37,7 +37,7 @@ void Robot::AutonomousPeriodic() {}
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
-  m_drive.ArcadeDrive(controller->GetY(), controller->GetX());
+  m_drive->ArcadeDrive(controller->GetRightY(), controller->GetLeftX());
 }
 
 void Robot::DisabledInit() {}
