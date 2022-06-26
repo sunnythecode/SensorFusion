@@ -1,13 +1,10 @@
 See file:///Users/sandeep/Documents/Robotics%20Fusion/SensorFusion/build/tmp/compileFrcUserProgramLinuxathenaReleaseExecutableFrcUserProgramCpp/output.txt for all output for compileFrcUserProgramLinuxathenaReleaseExecutableFrcUserProgramCpp.
-compiling Robot.cpp successful.
-In file included from /Users/sandeep/Documents/Robotics Fusion/SensorFusion/src/main/cpp/Robot.cpp:5:0:
-/Users/sandeep/Documents/Robotics Fusion/SensorFusion/src/main/include/Robot.h: In member function 'double Robot::DzShift(double, double)':
-/Users/sandeep/Documents/Robotics Fusion/SensorFusion/src/main/include/Robot.h:62:12: warning: unused variable 'speed' [-Wunused-variable]
-     double speed;
-            ^~~~~
-/Users/sandeep/Documents/Robotics Fusion/SensorFusion/src/main/include/Robot.h: In member function 'void Robot::encoders_to_coord(double, double)':
-/Users/sandeep/Documents/Robotics Fusion/SensorFusion/src/main/include/Robot.h:83:10: warning: 'dright' is used uninitialized in this function [-Wuninitialized]
+compiling Drivetrain.cpp successful.
+/Users/sandeep/Documents/Robotics Fusion/SensorFusion/src/main/cpp/Drivetrain.cpp: In member function 'void Drivetrain::encoders_to_coord(double, double)':
+/Users/sandeep/Documents/Robotics Fusion/SensorFusion/src/main/cpp/Drivetrain.cpp:75:10: warning: 'dright' is used uninitialized in this function [-Wuninitialized]
    double dright = dright;
           ^~~~~~
+
+compiling Robot.cpp successful.
 
 Finished compileFrcUserProgramLinuxathenaReleaseExecutableFrcUserProgramCpp, see full log file:///Users/sandeep/Documents/Robotics%20Fusion/SensorFusion/build/tmp/compileFrcUserProgramLinuxathenaReleaseExecutableFrcUserProgramCpp/output.txt.

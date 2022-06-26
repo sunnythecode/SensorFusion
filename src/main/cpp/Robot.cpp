@@ -2,59 +2,75 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "Robot.h"
+#include <frc/TimedRobot.h>
+#include <frc/Timer.h>
+#include <frc/XboxController.h>
+#include <frc/controller/RamseteController.h>
+#include <frc/filter/SlewRateLimiter.h>
+#include <frc/trajectory/TrajectoryGenerator.h>
 
-#include <fmt/core.h>
+#include "Drivetrain.h"
 
-#include <frc/smartdashboard/SmartDashboard.h>
+class Robot : public frc::TimedRobot {
+ public:
+  void RobotInit() override {
+    // Flush NetworkTables every loop. This ensures that robot pose and other
+    // values are sent during every iteration.
+    SetNetworkTablesFlushEnabled(true);
 
-void Robot::RobotInit() {
-  m_LL->RestoreFactoryDefaults();
-  m_LF->RestoreFactoryDefaults();
-  m_RL->RestoreFactoryDefaults();
-  m_RF->RestoreFactoryDefaults();
-  
-  m_LL->SetInverted(true);
-  m_LF->Follow(*m_LL, true);
-  m_RL->SetInverted(false);
-  m_RF->Follow(*m_RL, false);
+    m_trajectory = frc::TrajectoryGenerator::GenerateTrajectory(
+        frc::Pose2d(2_m, 2_m, 0_rad), {}, frc::Pose2d(6_m, 4_m, 0_rad),
+        frc::TrajectoryConfig(2_mps, 2_mps_sq));
+  }
 
-  lEncoder.SetPosition(0);
-  rEncoder.SetPosition(0);
-  position.push_back(0.0);
-  position.push_back(0.0);
-  position.push_back(0.0);
-}
+  void RobotPeriodic() override { m_drive.Periodic();
 
-void Robot::RobotPeriodic() {
-  frc::SmartDashboard::PutNumber("lEncoder", lEncoder.GetPosition());
-  frc::SmartDashboard::PutNumber("rEncoder", rEncoder.GetPosition());
+  }
 
-  encoders_to_coord(LLencoder_distance(), RLencoder_distance());
+  void AutonomousInit() override {
+    m_timer.Reset();
+    m_timer.Start();
+    m_drive.ResetOdometry(m_trajectory.InitialPose());
+  }
 
+  void AutonomousPeriodic() override {
+    auto elapsed = m_timer.Get();
+    auto reference = m_trajectory.Sample(elapsed);
+    auto speeds = m_ramsete.Calculate(m_drive.GetPose(), reference);
+    m_drive.Drive(speeds.vx, speeds.omega);
+  }
 
-  frc::SmartDashboard::PutNumber("Position X", position[0]);
-  frc::SmartDashboard::PutNumber("Position Y", position[1]);
-  frc::SmartDashboard::PutNumber("Position theta", position[2]);
-}
+  void TeleopPeriodic() override {
+    // Get the x speed. We are inverting this because Xbox controllers return
+    // negative values when we push forward.
+    const auto xSpeed = -m_speedLimiter.Calculate(m_controller.GetLeftY()) *
+                        Drivetrain::kMaxSpeed;
 
-void Robot::AutonomousInit() {}
+    // Get the rate of angular rotation. We are inverting this because we want a
+    // positive value when we pull to the left (remember, CCW is positive in
+    // mathematics). Xbox controllers return positive values when you pull to
+    // the right by default.
+    auto rot = -m_rotLimiter.Calculate(m_controller.GetRightX()) *
+               Drivetrain::kMaxAngularSpeed;
 
-void Robot::AutonomousPeriodic() {}
+    m_drive.Drive(xSpeed, rot);
+  }
 
-void Robot::TeleopInit() {}
+  void SimulationPeriodic() override { m_drive.SimulationPeriodic(); }
 
-void Robot::TeleopPeriodic() {
-  m_drive->ArcadeDrive(DzShift(controller->GetLeftY(), 0.2), DzShift(controller->GetRightX(), 0.2));
-}
+ private:
+  frc::XboxController m_controller{0};
 
-void Robot::DisabledInit() {}
+  // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0
+  // to 1.
+  frc::SlewRateLimiter<units::scalar> m_speedLimiter{3 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_rotLimiter{3 / 1_s};
 
-void Robot::DisabledPeriodic() {}
-
-void Robot::TestInit() {}
-
-void Robot::TestPeriodic() {}
+  Drivetrain m_drive;
+  frc::Trajectory m_trajectory;
+  frc::RamseteController m_ramsete;
+  frc::Timer m_timer;
+};
 
 #ifndef RUNNING_FRC_TESTS
 int main() {
