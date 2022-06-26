@@ -1,4 +1,4 @@
-See file:///C:/Users/Lancer%20Robotics/Downloads/SensorFusion/build/tmp/linkFrcUserProgramLinuxathenaDebugExecutable/output.txt for all output for linkFrcUserProgramLinuxathenaDebugExecutable.
+See file:///Users/sandeep/Documents/Robotics%20Fusion/SensorFusion/build/tmp/linkFrcUserProgramLinuxathenaDebugExecutable/output.txt for all output for linkFrcUserProgramLinuxathenaDebugExecutable.
 linking frcUserProgram successful.
 
-Finished linkFrcUserProgramLinuxathenaDebugExecutable, see full log file:///C:/Users/Lancer%20Robotics/Downloads/SensorFusion/build/tmp/linkFrcUserProgramLinuxathenaDebugExecutable/output.txt.
+Finished linkFrcUserProgramLinuxathenaDebugExecutable, see full log file:///Users/sandeep/Documents/Robotics%20Fusion/SensorFusion/build/tmp/linkFrcUserProgramLinuxathenaDebugExecutable/output.txt.

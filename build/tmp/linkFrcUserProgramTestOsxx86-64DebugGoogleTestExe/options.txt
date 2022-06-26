@@ -1,0 +1,40 @@
+-o
+"/Users/sandeep/Documents/Robotics Fusion/SensorFusion/build/exe/frcUserProgramTest/osxx86-64/debug/frcUserProgramTest"
+"/Users/sandeep/Documents/Robotics Fusion/SensorFusion/build/objs/frcUserProgramTest/osxx86-64/debug/frcUserProgramTestCpp/ckjrlhyc1oyba6iohqlnilo01/main.o"
+"/Users/sandeep/Documents/Robotics Fusion/SensorFusion/build/objs/frcUserProgramTest/osxx86-64/debug/frcUserProgramCpp/9760xtgdau9jsoxxi90ozrpww/Robot.o"
+/Users/sandeep/.gradle/caches/transforms-3/293241d0123da0d04ebe302ed0018ec0/transformed/wpilibNewCommands-cpp-2022.1.1-osxx86-64debug/osx/x86-64/shared/libwpilibNewCommandsd.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e5b84c21bdb7d9f01d6e9eb8bd05b51/transformed/REVLib-cpp-2022.1.1-osxx86-64staticdebug/osx/x86-64/static/libREVLib.a
+/Users/sandeep/.gradle/caches/transforms-3/520f2d3d739ea8f3a167419dd2eab7b3/transformed/REVLib-driver-2022.1.1-osxx86-64staticdebug/osx/x86-64/static/libREVLibDriver.a
+/Users/sandeep/.gradle/caches/transforms-3/ea4aa791a2dbbf2344e62e5a93517b36/transformed/wpilibc-cpp-2022.1.1-osxx86-64debug/osx/x86-64/shared/libwpilibcd.dylib
+/Users/sandeep/.gradle/caches/transforms-3/46f1f69ca7ba33e1f00cd1945c9f037f/transformed/ntcore-cpp-2022.1.1-osxx86-64debug/osx/x86-64/shared/libntcored.dylib
+/Users/sandeep/.gradle/caches/transforms-3/86b699451b61c162e5f9cd4f86ab361c/transformed/hal-cpp-2022.1.1-osxx86-64debug/osx/x86-64/shared/libwpiHald.dylib
+/Users/sandeep/.gradle/caches/transforms-3/d80cdbf5e516f515a8f15b29df72f02e/transformed/wpimath-cpp-2022.1.1-osxx86-64debug/osx/x86-64/shared/libwpimathd.dylib
+/Users/sandeep/.gradle/caches/transforms-3/58504002bec7cf72474a9335a7679ac1/transformed/wpiutil-cpp-2022.1.1-osxx86-64debug/osx/x86-64/shared/libwpiutild.dylib
+/Users/sandeep/.gradle/caches/transforms-3/53f3c16ef63a83748b8b4a927975a7cd/transformed/cameraserver-cpp-2022.1.1-osxx86-64debug/osx/x86-64/shared/libcameraserverd.dylib
+/Users/sandeep/.gradle/caches/transforms-3/6362b36ac4379f6f80607a58b24d807d/transformed/cscore-cpp-2022.1.1-osxx86-64debug/osx/x86-64/shared/libcscored.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_videod.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_calib3dd.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_gapid.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_imgprocd.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_photod.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_imgcodecsd.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_videoiod.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_mld.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_features2dd.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_flannd.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_stitchingd.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_cored.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_highguid.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/8e210ad8eff45a5e9a646a249c75e10d/transformed/opencv-cpp-4.5.2-1-osxx86-64debug/osx/x86-64/shared/libopencv_objdetectd.4.5.dylib
+/Users/sandeep/.gradle/caches/transforms-3/7e8c07c29219c8fe4a40ec00b977c474/transformed/googletest-1.9.0-5-437e100-1-osxx86-64staticdebug/osx/x86-64/static/libgoogletestd.a
+-framework
+CoreFoundation
+-framework
+AVFoundation
+-framework
+Foundation
+-framework
+CoreMedia
+-framework
+CoreVideo
+-m64

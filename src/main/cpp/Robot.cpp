@@ -18,17 +18,24 @@ void Robot::RobotInit() {
   m_LF->Follow(*m_LL, true);
   m_RL->SetInverted(false);
   m_RF->Follow(*m_RL, false);
-  
-  
-  
 
-  
+  lEncoder.SetPosition(0);
+  rEncoder.SetPosition(0);
+  position.push_back(0.0);
+  position.push_back(0.0);
+  position.push_back(0.0);
 }
 
 void Robot::RobotPeriodic() {
   frc::SmartDashboard::PutNumber("lEncoder", lEncoder.GetPosition());
   frc::SmartDashboard::PutNumber("rEncoder", rEncoder.GetPosition());
-  frc::SmartDashboard::PutNumber("", m->vals[0]);
+
+  encoders_to_coord(LLencoder_distance(), RLencoder_distance());
+
+
+  frc::SmartDashboard::PutNumber("Position X", position[0]);
+  frc::SmartDashboard::PutNumber("Position Y", position[1]);
+  frc::SmartDashboard::PutNumber("Position theta", position[2]);
 }
 
 void Robot::AutonomousInit() {}
@@ -38,7 +45,7 @@ void Robot::AutonomousPeriodic() {}
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
-  m_drive->ArcadeDrive(controller->GetRightY(), controller->GetLeftX());
+  m_drive->ArcadeDrive(DzShift(controller->GetLeftY(), 0.2), DzShift(controller->GetRightX(), 0.2));
 }
 
 void Robot::DisabledInit() {}

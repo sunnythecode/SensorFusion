@@ -1,0 +1,12 @@
+See file:///Users/sandeep/Documents/Robotics%20Fusion/SensorFusion/build/tmp/compileFrcUserProgramTestOsxx86-64ReleaseGoogleTestExeFrcUserProgramCpp/output.txt for all output for compileFrcUserProgramTestOsxx86-64ReleaseGoogleTestExeFrcUserProgramCpp.
+compiling Robot.cpp successful.
+In file included from /Users/sandeep/Documents/Robotics Fusion/SensorFusion/src/main/cpp/Robot.cpp:5:
+/Users/sandeep/Documents/Robotics Fusion/SensorFusion/src/main/include/Robot.h:62:12: warning: unused variable 'speed' [-Wunused-variable]
+    double speed;
+           ^
+/Users/sandeep/Documents/Robotics Fusion/SensorFusion/src/main/include/Robot.h:83:19: warning: variable 'dright' is uninitialized when used within its own initialization [-Wuninitialized]
+  double dright = dright;
+         ~~~~~~   ^~~~~~
+2 warnings generated.
+
+Finished compileFrcUserProgramTestOsxx86-64ReleaseGoogleTestExeFrcUserProgramCpp, see full log file:///Users/sandeep/Documents/Robotics%20Fusion/SensorFusion/build/tmp/compileFrcUserProgramTestOsxx86-64ReleaseGoogleTestExeFrcUserProgramCpp/output.txt.

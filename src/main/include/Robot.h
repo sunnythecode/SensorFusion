@@ -33,8 +33,10 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
   double DzShift(double input, double dz);
   //Function prone to skidding error and stuff(not optimized)
-  std::vector<double> encoders_to_coord(double left, double right, double x, double y, double theta);
-  std::vector<double> position = {double x, double y, double theta};
+  void encoders_to_coord(double left, double right);
+  double LLencoder_distance();
+  double RLencoder_distance();
+  std::vector<double> position;
   //robot baseline(width between right and left wheels in meters)
   double robotbaseline = 1.0;
 
@@ -53,10 +55,6 @@ class Robot : public frc::TimedRobot {
 
 
  private:
-  frc::SendableChooser<std::string> m_chooser;
-  const std::string kAutoNameDefault = "Default";
-  const std::string kAutoNameCustom = "My Auto";
-  std::string m_autoSelected;
 };
 
 
@@ -76,7 +74,11 @@ double Robot::DzShift(double input, double dz) {
     }
 }
 
-std::vector<double> Robot::encoders_to_coord(double left, double right, double x, double y, double theta) {
+
+void Robot::encoders_to_coord(double left, double right) {
+  double x = position[0];
+  double y = position[1];
+  double theta = position[2];
   double dleft = left;
   double dright = dright;
   double dcenter = (dleft + dright) / 2;
@@ -89,7 +91,18 @@ std::vector<double> Robot::encoders_to_coord(double left, double right, double x
   position.at(0) = f_x;
   position.at(1) = f_y;
   position.at(2) = f_theta;
-  frc::SmartDashboard::PutNumber("Position X", f_x);
-  frc::SmartDashboard::PutNumber("Position Y", f_y);
-  frc::SmartDashboard::PutNumber("Position theta", f_theta);
+
+}
+
+
+double Robot::LLencoder_distance(){
+  lEncoder.SetPositionConversionFactor(1);
+  //return (lEncoder.GetPosition() / 12 * (PI * 4));
+  return ((lEncoder.GetPosition() / 4.15) * (PI * 4) / 12); // 4.15 is ticks per rotation
+}
+
+double Robot::RLencoder_distance(){
+  rEncoder.SetPositionConversionFactor(1);
+  //return (lEncoder.GetPosition() / 12 * (PI * 4));
+  return ((lEncoder.GetPosition() / 4.15) * (PI * 4) / 12); // 4.15 is ticks per rotation
 }
