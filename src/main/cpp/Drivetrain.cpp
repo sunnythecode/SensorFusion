@@ -77,9 +77,9 @@ void Drivetrain::encoders_to_coord(double left, double right) {
   double theta2 = position[2];
   double theta = fmod(theta2, 360) * wpi::numbers::pi / 180;
   double dleft = left;
-  double dright = dright;
+  double dright = right;
   double dcenter = (dleft + dright) / 2;
-  double phi = abs(dleft - dright) / 2;
+  double phi = abs(dleft - dright) / 0.762;
 
   double f_theta = phi + theta;
   double f_x = x + (dcenter * cos(theta));
