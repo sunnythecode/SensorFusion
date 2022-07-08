@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Drivetrain.h"
+#include <wpi/numbers>
 
 #include <frc/RobotController.h>
 
@@ -61,6 +62,9 @@ void Drivetrain::Periodic() {
   m_fieldSim.SetRobotPose(m_odometry.GetPose());
   
   encoders_to_coord(m_leftEncoder.GetDistance(), m_rightEncoder.GetDistance());
+  frc::SmartDashboard::PutNumber("Left", m_leftEncoder.GetDistance());
+  frc::SmartDashboard::PutNumber("right", m_rightEncoder.GetDistance());
+
   frc::SmartDashboard::PutNumber("Position X", position[0]);
   frc::SmartDashboard::PutNumber("Position Y", position[1]);
   frc::SmartDashboard::PutNumber("Position theta", position[2]);
@@ -70,7 +74,8 @@ void Drivetrain::Periodic() {
 void Drivetrain::encoders_to_coord(double left, double right) {
   double x = position[0];
   double y = position[1];
-  double theta = position[2];
+  double theta2 = position[2];
+  double theta = fmod(theta2, 360) * wpi::numbers::pi / 180;
   double dleft = left;
   double dright = dright;
   double dcenter = (dleft + dright) / 2;
@@ -82,6 +87,8 @@ void Drivetrain::encoders_to_coord(double left, double right) {
 
   position.at(0) = f_x;
   position.at(1) = f_y;
+  f_theta = f_theta * 180 / wpi::numbers::pi;
+  f_theta = fmod(f_theta, 360);
   position.at(2) = f_theta;
 
 }
