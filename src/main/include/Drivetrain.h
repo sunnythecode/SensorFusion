@@ -58,6 +58,7 @@ class Drivetrain {
     frc::SmartDashboard::PutData("Field", &m_fieldSim);
   }
 
+
   static constexpr units::meters_per_second_t kMaxSpeed =
       3.0_mps;  // 3 meters per second
   static constexpr units::radians_per_second_t kMaxAngularSpeed{
@@ -67,6 +68,7 @@ class Drivetrain {
   void Drive(units::meters_per_second_t xSpeed,
              units::radians_per_second_t rot);
   void UpdateOdometry();
+  double DzShift(double input, double dz);
   void ResetOdometry(const frc::Pose2d& pose);
 
   frc::Pose2d GetPose() const { return m_odometry.GetPose(); }
@@ -116,3 +118,5 @@ class Drivetrain {
       m_drivetrainSystem, kTrackWidth, frc::DCMotor::CIM(2), 8, 2_in};
   private:
 };
+
+

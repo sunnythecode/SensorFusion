@@ -92,3 +92,20 @@ void Drivetrain::encoders_to_coord(double left, double right) {
   position.at(2) = f_theta;
 
 }
+
+
+double Drivetrain::DzShift(double input, double dz) {
+    double speed;
+    if (fabs(input) < dz) {
+        return 0.0;
+    }
+    if (input < 0) {
+        double m = (1/(1-dz));
+        double out = (m*(input-1))+1;
+        return (out * out);
+    } else {
+        double m = (1/(1-dz));
+        double out = (m*(fabs(input)-1))+1;
+        return -(out * out);
+    }
+}
