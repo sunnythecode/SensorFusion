@@ -57,8 +57,7 @@ class Drivetrain {
 
     frc::SmartDashboard::PutData("Field", &m_fieldSim);
   }
-
-
+  const double dbaseline = 0.762;
   static constexpr units::meters_per_second_t kMaxSpeed =
       3.0_mps;  // 3 meters per second
   static constexpr units::radians_per_second_t kMaxAngularSpeed{
