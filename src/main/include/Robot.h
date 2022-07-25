@@ -6,12 +6,14 @@
 #define PI 3.14159265
 #include <vector>
 #include <string>
+#include <wpi/numbers>
 #include <frc/Joystick.h>
 #include <frc/XboxController.h>
 #include <frc/TimedRobot.h>
 #include <rev/CANSparkMax.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/drive/DifferentialDrive.h>
+#include <frc/ADIS16448_IMU.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -37,8 +39,9 @@ class Robot : public frc::TimedRobot {
   double LLencoder_distance();
   double RLencoder_distance();
   std::vector<double> position;
+  frc::ADIS16448_IMU* gyro_imu = new frc::ADIS16448_IMU;
   //robot baseline(width between right and left wheels in meters)
-  double robotbaseline = 1.0;
+  double dbaseline = 1.0;
 
   frc::XboxController* controller = new frc::XboxController{0};
   rev::CANSparkMax* m_RL = new rev::CANSparkMax(rMotorLeaderID, rev::CANSparkMax::MotorType::kBrushless);
@@ -78,13 +81,13 @@ double Robot::DzShift(double input, double dz) {
 void Robot::encoders_to_coord(double left, double right) {
   double x = position[0];
   double y = position[1];
-  double theta = position[2];
-  double dleft = left;
-  double dright = dright;
-  double dcenter = (dleft + dright) / 2;
-  double phi = abs(dleft - dright) / 2;
+  double theta = position[2] * wpi::numbers::pi / 180; // theta should come in as a radian but output in degrees
 
-  double f_theta = phi + theta;
+  double dcenter = (left + right) / 2;
+  double phi = (right - left) / dbaseline; // In radians
+
+  double f_theta = theta + phi;
+  f_theta = f_theta * 180 / wpi::numbers::pi;
   double f_x = x + (dcenter * cos(theta));
   double f_y = y + (dcenter * sin(theta));
 
