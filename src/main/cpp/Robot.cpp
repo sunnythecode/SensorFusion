@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include <frc/TimedRobot.h>
+#include <frc/Joystick.h>
 #include <frc/Timer.h>
 #include <frc/XboxController.h>
 #include <frc/controller/RamseteController.h>
@@ -43,8 +44,8 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override {
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
-    double left = m_drive.DzShift(m_controller.GetLeftY(), 0.2);
-    double rotX = m_drive.DzShift(m_controller.GetRightX(), 0.2);
+    double left = m_drive.DzShift(jstick.GetRawAxis(0), 0.2);
+    double rotX = m_drive.DzShift(jstick.GetRawAxis(2), 0.2);
     const auto xSpeed = -m_speedLimiter.Calculate(left) *
                         Drivetrain::kMaxSpeed;
 
@@ -62,6 +63,7 @@ class Robot : public frc::TimedRobot {
 
  private:
   frc::XboxController m_controller{0};
+  frc::Joystick jstick{0};
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0
   // to 1.

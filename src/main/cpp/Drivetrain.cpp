@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+#include <cmath>
 #include "Drivetrain.h"
 #include <wpi/numbers>
 #include <math.h>
@@ -82,7 +82,7 @@ void Drivetrain::encoders_to_coord(double left, double right) {
   double phi = (right - left) / dbaseline; // In radians
 
   double f_theta = theta + phi;
-  f_theta = f_theta * 180 / wpi::numbers::pi;
+  f_theta = fmod(f_theta * 180 / wpi::numbers::pi, 360);
   double f_x = x + (dcenter * cos(theta));
   double f_y = y + (dcenter * sin(theta));
 
