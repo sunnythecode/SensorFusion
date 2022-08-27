@@ -87,7 +87,7 @@ void Robot::encoders_to_coord(double left, double right) {
   double phi = (right - left) / dbaseline; // In radians
 
   double f_theta = theta + phi;
-  f_theta = f_theta * 180 / wpi::numbers::pi;
+  f_theta = fmod(f_theta * 180 / wpi::numbers::pi, 360);
   double f_x = x + (dcenter * cos(theta));
   double f_y = y + (dcenter * sin(theta));
 
@@ -96,6 +96,8 @@ void Robot::encoders_to_coord(double left, double right) {
   position.at(2) = f_theta;
 
 }
+
+
 
 
 double Robot::LLencoder_distance(){
