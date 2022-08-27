@@ -121,9 +121,4 @@ double Robot::get_magnometer(){
   double field_angle = atan(x_raw/y_raw);
 
   return field_angle;
-
-
-
-
-
 }
