@@ -38,6 +38,8 @@ class Robot : public frc::TimedRobot {
   void encoders_to_coord(double left, double right);
   double LLencoder_distance();
   double RLencoder_distance();
+  double get_magnometer();
+  
   std::vector<double> position;
   frc::ADIS16448_IMU* gyro_imu = new frc::ADIS16448_IMU;
   //robot baseline(width between right and left wheels in meters)
@@ -110,4 +112,18 @@ double Robot::RLencoder_distance(){
   rEncoder.SetPositionConversionFactor(1);
   //return (lEncoder.GetPosition() / 12 * (PI * 4));
   return ((lEncoder.GetPosition() / 4.15) * (PI * 4) / 12); // 4.15 is ticks per rotation
+}
+
+double Robot::get_magnometer(){
+  double x_raw = gyro_imu->GetMagneticFieldX().value();
+  double y_raw = gyro_imu->GetMagneticFieldY().value();
+
+  double field_angle = atan(x_raw/y_raw);
+
+  return field_angle;
+
+
+
+
+
 }

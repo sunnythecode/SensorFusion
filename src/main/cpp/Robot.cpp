@@ -36,6 +36,7 @@ void Robot::RobotPeriodic() {
   frc::SmartDashboard::PutNumber("Position X", position[0]);
   frc::SmartDashboard::PutNumber("Position Y", position[1]);
   frc::SmartDashboard::PutNumber("Position theta", position[2]);
+  frc::SmartDashboard::PutNumber("Magnometer", get_magnometer());
 
   frc::SmartDashboard::PutNumber("Gyro", gyro_imu->GetAngle().value());
 }
