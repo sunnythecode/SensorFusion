@@ -9,10 +9,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 void Robot::RobotInit() {
-  maginit = get_magnometer();
-  gyro_imu->Reset();
-  gyro_corrected = 0.0;
-
+  sensors->initializeSensors();
 
   m_LL->RestoreFactoryDefaults();
   m_LF->RestoreFactoryDefaults();
@@ -30,35 +27,11 @@ void Robot::RobotInit() {
   m_LF->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_RL->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_RF->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-
-  lEncoder.SetPosition(0);
-  rEncoder.SetPosition(0);
-  lEncoder.SetPositionConversionFactor(1.96);
-  rEncoder.SetPositionConversionFactor(1.96);
-  position.push_back(0.0);
-  position.push_back(0.0);
-  position.push_back(0.0);
 }
 
 void Robot::RobotPeriodic() {
-  frc::SmartDashboard::PutNumber("lEncoder", lEncoder.GetPosition());
-  frc::SmartDashboard::PutNumber("rEncoder", rEncoder.GetPosition());
-
-  encoders_to_coord(lEncoder.GetPosition(), rEncoder.GetPosition());
-  //lEncoder.SetPosition(0);
-  //rEncoder.SetPosition(0);
-  gyro_edit();
-
-
-
-  //frc::SmartDashboard::PutNumber("Position X", position[0]);
-  //frc::SmartDashboard::PutNumber("Position Y", position[1]);
-  frc::SmartDashboard::PutNumber("Position theta", position[2]);
-  frc::SmartDashboard::PutNumber("Magnometer", get_magnometer());
-  //frc::SmartDashboard::PutNumber("GyroEdited", gyromag);
-
-  frc::SmartDashboard::PutNumber("Gyro", get_gyro());
-  frc::SmartDashboard::PutNumber("Gyro Corrected", gyro_corrected);
+  sensors->updateSensors(false); // false to not print sensor stuff
+  frc::SmartDashboard::PutNumber("True Gyro", sensors->getTrueGyro());
 }
 
 void Robot::AutonomousInit() {}

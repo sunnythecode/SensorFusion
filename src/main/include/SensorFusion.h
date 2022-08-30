@@ -33,8 +33,8 @@ class SensorFusion {
 
     // Actual Functions used outside of class: 
     void initializeSensors();
-    void updateSensors();
-    double Get_trueGyro();
+    void updateSensors(bool print);
+    double getTrueGyro();
 
 
     //Sensor Drift

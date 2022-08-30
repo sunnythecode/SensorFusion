@@ -4,7 +4,7 @@
 
 
 #include "SensorFusion.h"
-#pragma once
+#include "PiModule.h"
 #define PI 3.14159265
 
 #include <vector>
@@ -115,25 +115,26 @@ void SensorFusion::initializeSensors() {
     position.push_back(0.0);
 }
 
-void SensorFusion::updateSensors() {
+void SensorFusion::updateSensors(bool print) {
+    if (print) {
     frc::SmartDashboard::PutNumber("lEncoder", lEncoder->GetPosition());
     frc::SmartDashboard::PutNumber("rEncoder", rEncoder->GetPosition());
-
+    }
     encoders_to_coord(lEncoder->GetPosition(), rEncoder->GetPosition());
     gyro_drift();
 
 
-
+    if (print) {
     //frc::SmartDashboard::PutNumber("Position X", position[0]);
     //frc::SmartDashboard::PutNumber("Position Y", position[1]);
     frc::SmartDashboard::PutNumber("Position theta", position[2]);
     frc::SmartDashboard::PutNumber("Magnometer", get_magnometer());
 
     frc::SmartDashboard::PutNumber("Gyro", get_gyro());
-    frc::SmartDashboard::PutNumber("Gyro Corrected", mag_corrected);
-
+    frc::SmartDashboard::PutNumber("Mag Corrected", mag_corrected);
+    }
 }
 
-double SensorFusion::Get_trueGyro() {
+double SensorFusion::getTrueGyro() {
     return (mag_corrected - maginit);
 }
