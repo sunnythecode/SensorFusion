@@ -6,23 +6,29 @@
 #define PI 3.14159265
 #include <vector>
 #include <string>
+
 #include <wpi/numbers>
 #include <frc/Joystick.h>
+#include "SFDrive.h"
 #include <frc/XboxController.h>
 #include <frc/TimedRobot.h>
 #include <rev/CANSparkMax.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/ADIS16448_IMU.h>
 
 class Robot : public frc::TimedRobot {
  public:
   //Fix these:
-  int rMotorLeaderID = 15;
-  int rMotorFollowerID = 14;
-  int lMotorLeaderID = 12;
-  int lMotorFollowerID = 13;
+  int rMotorLeaderID = 9;
+  int rMotorFollowerID = 3;
+  int lMotorLeaderID = 15;
+  int lMotorFollowerID = 16;
   
+
+  //Functions
   void RobotInit() override;
   void RobotPeriodic() override;
   void AutonomousInit() override;
@@ -36,22 +42,46 @@ class Robot : public frc::TimedRobot {
   double DzShift(double input, double dz);
   //Function prone to skidding error and stuff(not optimized)
   void encoders_to_coord(double left, double right);
-  double LLencoder_distance();
-  double RLencoder_distance();
   double get_magnometer();
-  
-  std::vector<double> position;
-  frc::ADIS16448_IMU* gyro_imu = new frc::ADIS16448_IMU;
-  //robot baseline(width between right and left wheels in meters)
-  double dbaseline = 1.0;
+  double get_gyro();
+  void gyro_edit();
 
-  frc::XboxController* controller = new frc::XboxController{0};
+
+  //Sensor Drift
+  double bound_num;
+  double maginit;
+  double max_drift = 0.4;
+
+  double gyro_corrected;
+  double last_gyro_corrected = 0.0;
+
+  double last_gyro = 0.0;
+  //robot baseline(width between right and left wheels inches)
+  double dbaseline = 26.0;
+
+
+  //Postion
+  std::vector<double> position;
+
+
+  //Gyro Stuff
+  frc::ADIS16448_IMU* gyro_imu = new frc::ADIS16448_IMU;
+  
+
+  //Controller
+  frc::XboxController* ctr = new frc::XboxController{0};
+
+  //Motors
   rev::CANSparkMax* m_RL = new rev::CANSparkMax(rMotorLeaderID, rev::CANSparkMax::MotorType::kBrushless);
   rev::CANSparkMax* m_RF = new rev::CANSparkMax(rMotorFollowerID, rev::CANSparkMax::MotorType::kBrushless);
   rev::CANSparkMax* m_LL = new rev::CANSparkMax(lMotorLeaderID, rev::CANSparkMax::MotorType::kBrushless);
   rev::CANSparkMax* m_LF = new rev::CANSparkMax(lMotorFollowerID, rev::CANSparkMax::MotorType::kBrushless);
+
+  //Drive Base:
+  SFDrive* m_drive = new SFDrive(m_LL, m_RL);
+
   
-  frc::DifferentialDrive* m_drive = new frc::DifferentialDrive(*m_LL, *m_RL);
+  //Encoders
   rev::SparkMaxRelativeEncoder lEncoder = m_LL->GetEncoder();
   rev::SparkMaxRelativeEncoder rEncoder = m_RL->GetEncoder();
 
@@ -63,24 +93,12 @@ class Robot : public frc::TimedRobot {
 };
 
 
-double Robot::DzShift(double input, double dz) {
-    double speed;
-    if (fabs(input) < dz) {
-        return 0.0;
-    }
-    if (input < 0) {
-        double m = (1/(1-dz));
-        double out = (m*(input-1))+1;
-        return (out * out);
-    } else {
-        double m = (1/(1-dz));
-        double out = (m*(fabs(input)-1))+1;
-        return -(out * out);
-    }
-}
-
-
 void Robot::encoders_to_coord(double left, double right) {
+  double theta_new = -(right - left) / (dbaseline); //radians
+  theta_new = fmod(theta_new * 180 / wpi::numbers::pi, 360); // degrees
+  
+
+/*
   double x = position[0];
   double y = position[1];
   double theta = position[2] * wpi::numbers::pi / 180; // theta should come in as a radian but output in degrees
@@ -92,33 +110,76 @@ void Robot::encoders_to_coord(double left, double right) {
   f_theta = fmod(f_theta * 180 / wpi::numbers::pi, 360);
   double f_x = x + (dcenter * cos(theta));
   double f_y = y + (dcenter * sin(theta));
-
-  position.at(0) = f_x;
-  position.at(1) = f_y;
-  position.at(2) = f_theta;
-
+*/
+  //position.at(0) = f_x;
+  //position.at(1) = f_y;
+  position.at(2) = theta_new;
 }
 
 
 
 
-double Robot::LLencoder_distance(){
-  lEncoder.SetPositionConversionFactor(1);
-  //return (lEncoder.GetPosition() / 12 * (PI * 4));
-  return ((lEncoder.GetPosition() / 4.15) * (PI * 4) / 12); // 4.15 is ticks per rotation
-}
 
-double Robot::RLencoder_distance(){
-  rEncoder.SetPositionConversionFactor(1);
-  //return (lEncoder.GetPosition() / 12 * (PI * 4));
-  return ((lEncoder.GetPosition() / 4.15) * (PI * 4) / 12); // 4.15 is ticks per rotation
-}
+
 
 double Robot::get_magnometer(){
   double x_raw = gyro_imu->GetMagneticFieldX().value();
   double y_raw = gyro_imu->GetMagneticFieldY().value();
 
-  double field_angle = atan(x_raw/y_raw);
+  double field_angle = atan2(y_raw, x_raw) * 180 / PI;
 
-  return field_angle;
+  
+  if (field_angle < 0) {
+    field_angle = 360 - (field_angle * -1);
+  }
+
+  return (360 - field_angle);
 }
+
+double Robot::get_gyro() {
+  double raw_angle = gyro_imu->GetAngle().value();
+  double new_angle;
+  if (raw_angle < 0) {
+    new_angle = 360 + raw_angle;
+    return fmod(new_angle, 360);
+  } else {
+    return fmod(raw_angle, 360);
+  }
+}
+
+void Robot::gyro_edit() {
+  double gyro = get_gyro();
+  double mag = get_magnometer();
+  double d_drift = 0;
+  double derror = fabs(mag - gyro_corrected);
+  //frc::SmartDashboard::PutNumber("Derror", derror);
+  
+  if ((derror >= bound_num) && (gyro_corrected < mag)) {
+    d_drift = max_drift;
+    frc::SmartDashboard::PutNumber("Error Line 156 Robot.h", 0);
+  } else if ((derror < bound_num) && (gyro_corrected < mag)) {
+    d_drift = ((bound_num - derror) / bound_num) * max_drift;
+    frc::SmartDashboard::PutNumber("Error Line 156 Robot.h", 0);
+  } if ((derror >= bound_num) && (gyro_corrected > mag)) {
+    d_drift = -max_drift;
+    frc::SmartDashboard::PutNumber("Error Line 156 Robot.h", 0);
+  } else if ((derror < bound_num) && (gyro_corrected > mag)) {
+    d_drift = -(((bound_num - derror) / bound_num) * max_drift);
+    frc::SmartDashboard::PutNumber("Error Line 156 Robot.h", 0);
+  }
+    
+  else {
+    frc::SmartDashboard::PutNumber("Error Line 156 Robot.h", -1);
+  }
+  //Case 1: error outside bound and less
+
+
+  gyro_corrected += ((gyro - last_gyro) + d_drift); //Find change in gyro and add drift
+  last_gyro = gyro;
+  //last_gyro_corrected = gyro_corrected;
+  
+ 
+}
+
+
+

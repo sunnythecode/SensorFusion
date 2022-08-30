@@ -1,27 +1,24 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-/*
-#include "SensorModule.h"
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <math.h>
+#include<PiModule.h>
 
+// Server side implementation of UDP client-server model
 #include <stdio.h>
-#include <iostream>
-#include <strings.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string>
+#include <string.h>
 #include <sys/types.h>
-#include <arpa/inet.h>
 #include <sys/socket.h>
-#include<netinet/in.h>
-#define PORT 8080
+#include <arpa/inet.h>
+#include <netinet/in.h>
+	
+#define PORT	 8080
 #define MAXLINE 1024
+	
+PiModule::PiModule() {}
 
-
-SensorModule::SensorModule() {
-	rev::SparkMaxRelativeEncoder* lEncoder, rev::SparkMaxRelativeEncoder* rEncoder): lEncoder{lEncoder}, rEncoder{rEncoder} {}
-};
-
-int SensorModule::receiveInt() {
+// Driver code
+void PiModule::start_server() {
+    
 	int sockfd;
 	char buffer[MAXLINE];
 	const char *hello = "Hello from server";
@@ -53,7 +50,8 @@ int SensorModule::receiveInt() {
     socklen_t len;
 	
 	len = sizeof(cliaddr); //len is value/result
-	
+	while (true) {
+
 	n = recvfrom(sockfd, (char *)buffer, MAXLINE,
 				MSG_WAITALL, ( struct sockaddr *) &cliaddr,
 				&len);
@@ -62,17 +60,8 @@ int SensorModule::receiveInt() {
 	sendto(sockfd, (const char *)hello, strlen(hello),
 		0, (const struct sockaddr *) &cliaddr,
 			len);
-	printf("Hello message sent.\n");
-		
-	return 0;
+    current_val = std::atof(buffer);
+    }
 }
 
-}
-
-void SensorModule::update() {
-	imu->GetAngle()
-
-
-}
-
-*/
+double PiModule::get_distance() { return current_val; }
