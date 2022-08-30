@@ -35,7 +35,6 @@ void Robot::RobotInit() {
   rEncoder.SetPosition(0);
   lEncoder.SetPositionConversionFactor(1.96);
   rEncoder.SetPositionConversionFactor(1.96);
-  gyro_imu->Reset();
   position.push_back(0.0);
   position.push_back(0.0);
   position.push_back(0.0);
