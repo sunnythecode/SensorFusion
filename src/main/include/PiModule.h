@@ -13,7 +13,7 @@ class PiModule {
     PiModule();
 
     void start_server();
-    double current_val;
+    double current_val = -1;
     double get_distance();
 
 

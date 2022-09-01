@@ -9,15 +9,25 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 void Robot::RobotInit() {
-  maginit = get_magnometer();
-  gyro_imu->Reset();
-  gyro_corrected = 0.0;
-
+  sensors->initializeSensors();
+  pi_us->start_server();
 
   m_LL->RestoreFactoryDefaults();
   m_LF->RestoreFactoryDefaults();
   m_RL->RestoreFactoryDefaults();
   m_RF->RestoreFactoryDefaults();
+
+  m_LL->SetSmartCurrentLimit(driveMotorCurrentLimit);
+  m_RL->SetSmartCurrentLimit(driveMotorCurrentLimit);
+  m_LF->SetSmartCurrentLimit(driveMotorCurrentLimit);
+  m_RF->SetSmartCurrentLimit(driveMotorCurrentLimit);
+
+  m_LL->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  m_RL->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  m_LF->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  m_RF->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+
 
 
   
@@ -30,35 +40,16 @@ void Robot::RobotInit() {
   m_LF->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_RL->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_RF->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-
-  lEncoder.SetPosition(0);
-  rEncoder.SetPosition(0);
-  lEncoder.SetPositionConversionFactor(1.96);
-  rEncoder.SetPositionConversionFactor(1.96);
-  position.push_back(0.0);
-  position.push_back(0.0);
-  position.push_back(0.0);
 }
 
 void Robot::RobotPeriodic() {
-  frc::SmartDashboard::PutNumber("lEncoder", lEncoder.GetPosition());
-  frc::SmartDashboard::PutNumber("rEncoder", rEncoder.GetPosition());
-
-  encoders_to_coord(lEncoder.GetPosition(), rEncoder.GetPosition());
-  //lEncoder.SetPosition(0);
-  //rEncoder.SetPosition(0);
-  gyro_edit();
-
-
-
-  //frc::SmartDashboard::PutNumber("Position X", position[0]);
-  //frc::SmartDashboard::PutNumber("Position Y", position[1]);
-  frc::SmartDashboard::PutNumber("Position theta", position[2]);
-  frc::SmartDashboard::PutNumber("Magnometer", get_magnometer());
-  //frc::SmartDashboard::PutNumber("GyroEdited", gyromag);
-
-  frc::SmartDashboard::PutNumber("Gyro", get_gyro());
-  frc::SmartDashboard::PutNumber("Gyro Corrected", gyro_corrected);
+  if (ctr->GetAButtonReleased()) {
+    sensors->initializeSensors(); //reinitialize from magnetometer noise
+  }
+  sensors->updateSensors(true); // false to not print sensor stuff
+  frc::SmartDashboard::PutNumber("True Gyro", sensors->getTrueGyro());
+  frc::SmartDashboard::PutNumber("True Enc", sensors->getTrueEnc());
+  frc::SmartDashboard::PutNumber("Pi", pi_us->get_distance());
 }
 
 void Robot::AutonomousInit() {}
@@ -68,7 +59,7 @@ void Robot::AutonomousPeriodic() {}
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
-  m_drive->ArcadeDrive(ctr->GetLeftY(), ctr->GetRightX());
+  m_drive->ArcadeDrive(ctr->GetLeftY(), -(ctr->GetRightX()));
 }
 
 void Robot::DisabledInit() {}
