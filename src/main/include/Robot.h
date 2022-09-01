@@ -16,11 +16,12 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 
+#include "PiModule.h"
 #include "SensorFusion.h"
 #include "SFDrive.h"
 
 #include <frc/drive/DifferentialDrive.h>
-#include <frc/ADIS16448_IMU.h>
+
 
 class Robot : public frc::TimedRobot {
  public:
@@ -43,13 +44,13 @@ class Robot : public frc::TimedRobot {
   void TestInit() override;
   void TestPeriodic() override;
 
+  //Drive constants:
+  int driveMotorCurrentLimit = 30;
 
-
-  
-
+  //Pi Sensor
+  PiModule* pi_us = new PiModule();
 
   //Gyro Stuff
-  frc::ADIS16448_IMU* gyro_imu = new frc::ADIS16448_IMU;
   
 
   //Controller

@@ -10,11 +10,24 @@
 
 void Robot::RobotInit() {
   sensors->initializeSensors();
+  pi_us->start_server();
 
   m_LL->RestoreFactoryDefaults();
   m_LF->RestoreFactoryDefaults();
   m_RL->RestoreFactoryDefaults();
   m_RF->RestoreFactoryDefaults();
+
+  m_LL->SetSmartCurrentLimit(driveMotorCurrentLimit);
+  m_RL->SetSmartCurrentLimit(driveMotorCurrentLimit);
+  m_LF->SetSmartCurrentLimit(driveMotorCurrentLimit);
+  m_RF->SetSmartCurrentLimit(driveMotorCurrentLimit);
+
+  m_LL->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  m_RL->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  m_LF->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  m_RF->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+
 
 
   
@@ -30,8 +43,13 @@ void Robot::RobotInit() {
 }
 
 void Robot::RobotPeriodic() {
-  sensors->updateSensors(false); // false to not print sensor stuff
+  if (ctr->GetAButtonReleased()) {
+    sensors->initializeSensors(); //reinitialize from magnetometer noise
+  }
+  sensors->updateSensors(true); // false to not print sensor stuff
   frc::SmartDashboard::PutNumber("True Gyro", sensors->getTrueGyro());
+  frc::SmartDashboard::PutNumber("True Enc", sensors->getTrueEnc());
+  frc::SmartDashboard::PutNumber("Pi", pi_us->get_distance());
 }
 
 void Robot::AutonomousInit() {}
@@ -41,7 +59,7 @@ void Robot::AutonomousPeriodic() {}
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
-  m_drive->ArcadeDrive(ctr->GetLeftY(), ctr->GetRightX());
+  m_drive->ArcadeDrive(ctr->GetLeftY(), -(ctr->GetRightX()));
 }
 
 void Robot::DisabledInit() {}
