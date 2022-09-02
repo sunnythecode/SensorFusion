@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
+#include <thread>
 
 #include <fmt/core.h>
 
@@ -11,6 +12,8 @@
 void Robot::RobotInit() {
   sensors->initializeSensors();
   pi_us->start_server();
+  //Thread update code
+  std::thread(pi_us->update_pi());
 
   m_LL->RestoreFactoryDefaults();
   m_LF->RestoreFactoryDefaults();
@@ -47,7 +50,7 @@ void Robot::RobotPeriodic() {
     sensors->initializeSensors(); //reinitialize from magnetometer noise
   }
   sensors->updateSensors(true); // false to not print sensor stuff
-  pi_us->update_pi();
+  //pi_us->update_pi(); Added thread in robotInit
   pi_val = pi_us->get_distance();
   frc::SmartDashboard::PutNumber("True Gyro", sensors->getTrueGyro());
   frc::SmartDashboard::PutNumber("True Enc", sensors->getTrueEnc());
