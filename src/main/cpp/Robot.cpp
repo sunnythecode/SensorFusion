@@ -47,9 +47,14 @@ void Robot::RobotPeriodic() {
     sensors->initializeSensors(); //reinitialize from magnetometer noise
   }
   sensors->updateSensors(true); // false to not print sensor stuff
+  pi_us->update_pi();
+  pi_val = pi_us->get_distance();
   frc::SmartDashboard::PutNumber("True Gyro", sensors->getTrueGyro());
   frc::SmartDashboard::PutNumber("True Enc", sensors->getTrueEnc());
-  frc::SmartDashboard::PutNumber("Pi", pi_us->get_distance());
+  frc::SmartDashboard::PutNumber("Pi", pi_val);
+  if (pi_val < 4) {
+    sensors->initializeSensors(); // Reset sensors at a wall
+  }
 }
 
 void Robot::AutonomousInit() {}

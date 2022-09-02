@@ -21,7 +21,7 @@
 
 SensorFusion::SensorFusion(rev::SparkMaxRelativeEncoder* lEncoder, rev::SparkMaxRelativeEncoder* rEncoder): lEncoder{lEncoder}, rEncoder{rEncoder} {}
 
-double SensorFusion::driftAlgorithm(double short_sensor, double long_sensor, double error, double corrected, double long_bound, double max_drift) {
+double SensorFusion::driftAlgorithm(double short_sensor, double last_short_sensor, double long_sensor, double error, double corrected, double long_bound, double max_drift) {
     double d_drift = 0;
     double derror = error;
     double mag = long_sensor;
@@ -41,7 +41,27 @@ double SensorFusion::driftAlgorithm(double short_sensor, double long_sensor, dou
         frc::SmartDashboard::PutBoolean("Match", true);
     }
 
-    return d_drift;
+    double save_mag_c = corrected;
+    corrected += (wraparound_to_change(last_short_sensor, short_sensor) + d_drift); //Find change in gyro and add drift
+    corrected = range360(corrected);
+
+    if (abs(mag - corrected) > corrected_bound) {
+      if (mag > corrected) { //mag 0 mag_corrected 359
+        d_drift = fabs(d_drift);
+        save_mag_c += ((wraparound_to_change(last_short_sensor, short_sensor) - d_drift));
+        save_mag_c = range360(save_mag_c);
+        corrected = save_mag_c;
+
+      } else if (mag < corrected) { //mag 360, other 0
+        d_drift = fabs(d_drift);
+        save_mag_c += ((wraparound_to_change(last_short_sensor, short_sensor) + d_drift));
+        save_mag_c = range360(save_mag_c);
+        corrected = save_mag_c;
+      }
+
+    }
+
+    return corrected;
 }
 
 double SensorFusion::range360(double inp) {
@@ -125,47 +145,7 @@ void SensorFusion::gyro_drift() {
   double d_drift = 0;
   double derror = fabs(mag - mag_corrected); // error drift
   
-  /*
-  if ((derror >= bound_num) && (mag_corrected < mag)) { // Out of bounds + Less than
-    d_drift = max_drift;
-    
-  } else if ((derror < bound_num) && (mag_corrected < mag)) { // In Bounds + Less than
-    d_drift = ((bound_num - derror) / bound_num) * max_drift;
-    
-  } if ((derror >= bound_num) && (mag_corrected > mag)) { // Out of Bounds + More than
-    d_drift = -max_drift;
-    
-  } else if ((derror < bound_num) && (mag_corrected > mag)) { // In Bounds + More than
-    d_drift = -(((bound_num - derror) / bound_num) * max_drift);
-    
-  }
-    
-  else {
-    frc::SmartDashboard::PutNumber("Error Line 156 Robot.h", -1);
-  }
-  */
-
-  d_drift = driftAlgorithm(gyro, mag, derror, mag_corrected, bound_num, max_drift);
-  
-  double save_mag_c = mag_corrected;
-  mag_corrected += (wraparound_to_change(last_gyro, gyro) + d_drift); //Find change in gyro and add drift
-  mag_corrected = range360(mag_corrected);
-
-  if (abs(mag - mag_corrected) > corrected_bound) {
-      if (mag > mag_corrected) { //mag 0 mag_corrected 359
-        d_drift = fabs(d_drift);
-        save_mag_c += ((wraparound_to_change(last_gyro, gyro) - d_drift));
-        save_mag_c = range360(save_mag_c);
-        mag_corrected = save_mag_c;
-
-      } else if (mag < mag_corrected) { //mag 360, other 0
-        d_drift = fabs(d_drift);
-        save_mag_c += ((wraparound_to_change(last_gyro, gyro) + d_drift));
-        save_mag_c = range360(save_mag_c);
-        mag_corrected = save_mag_c;
-      }
-
-  }
+  mag_corrected = driftAlgorithm(gyro, last_gyro, mag, derror, mag_corrected, bound_num, max_drift);
   last_gyro = gyro;
   
  
@@ -176,46 +156,8 @@ void SensorFusion::enc_drift() {
   double mag = get_magnometer();
   double d_drift = 0;
   double derror = fabs(mag - mag_corrected_enc);
-  /*
-  if ((derror >= bound_num) && (mag_corrected_enc < mag)) { // Out of bounds + Less than
-    d_drift = max_drift;
-    
-  } else if ((derror < bound_num) && (mag_corrected_enc < mag)) { // In Bounds + Less than
-    d_drift = ((bound_num - derror) / bound_num) * max_drift;
-    
-  } if ((derror >= bound_num) && (mag_corrected_enc > mag)) { // Out of Bounds + More than
-    d_drift = -max_drift;
-    
-  } else if ((derror < bound_num) && (mag_corrected_enc > mag)) { // In Bounds + More than
-    d_drift = -(((bound_num - derror) / bound_num) * max_drift);
-    
-  }
-    
-  else {
-    frc::SmartDashboard::PutNumber("Error Line 156 Robot.h", -1);
-  }
-  */
-  d_drift = driftAlgorithm(enc_theta, mag, derror, mag_corrected_enc, bound_num, max_drift);
-  double save_mag_c_enc = mag_corrected_enc;
 
-  mag_corrected_enc += (wraparound_to_change(last_enc, enc_theta) + d_drift); //Find change in gyro and add drift
-  mag_corrected_enc = range360(mag_corrected_enc);
-
-  if (abs(mag - mag_corrected_enc) > corrected_bound) {
-      if (mag > mag_corrected_enc) { //mag 0 mag_corrected 359
-        d_drift = fabs(d_drift);
-        save_mag_c_enc += ((wraparound_to_change(last_enc, enc_theta) - d_drift));
-        save_mag_c_enc = range360(save_mag_c_enc);
-        mag_corrected_enc = save_mag_c_enc;
-
-      } else if (mag < mag_corrected_enc) { //mag 360, other 0
-        d_drift = fabs(d_drift);
-        save_mag_c_enc += ((wraparound_to_change(last_enc, enc_theta) + d_drift));
-        save_mag_c_enc = range360(save_mag_c_enc);
-        mag_corrected_enc = save_mag_c_enc;
-      }
-
-  }
+  mag_corrected_enc = driftAlgorithm(enc_theta, last_enc, mag, derror, mag_corrected_enc, bound_num, max_drift);
   last_enc = enc_theta;
 }
 
@@ -228,7 +170,7 @@ void SensorFusion::initializeSensors() {
     last_gyro = 0.0;
     enc_theta = 0.0;
     last_enc = 0.0;
-
+    
     lEncoder->SetPosition(0);
     rEncoder->SetPosition(0);
     lEncoder->SetPositionConversionFactor(1.96);

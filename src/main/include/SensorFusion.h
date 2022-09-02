@@ -21,7 +21,7 @@ class SensorFusion {
     SensorFusion(rev::SparkMaxRelativeEncoder* lEncoder, rev::SparkMaxRelativeEncoder* rEncoder);
 
     //Wraparound code from 0 - 360
-    double driftAlgorithm(double short_sensor, double long_sensor, double error, double corrected, double long_bound, double max_drift);
+    double driftAlgorithm(double short_sensor, double last_short_sensor, double long_sensor, double error, double corrected, double long_bound, double max_drift);
     double range360(double inp);
     double wraparound_to_change(double last_gyro, double gyro);
 

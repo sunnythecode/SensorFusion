@@ -49,6 +49,7 @@ class Robot : public frc::TimedRobot {
 
   //Pi Sensor
   PiModule* pi_us = new PiModule();
+  double pi_val = 0;
 
   //Gyro Stuff
   

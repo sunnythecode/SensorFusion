@@ -10,6 +10,10 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+
+//IKD
+#include <frc/smartdashboard/SmartDashboard.h>
+
 	
 #define PORT	 8080
 #define MAXLINE 1024
@@ -49,19 +53,27 @@ void PiModule::start_server() {
 	int n;
     socklen_t len;
 	
-	len = sizeof(cliaddr); //len is value/result
-	while (true) {
+	sockfd_g = sockfd;
+	buffer_g = buffer;
+	cliaddr_g = cliaddr;
 
-	n = recvfrom(sockfd, (char *)buffer, MAXLINE,
-				MSG_WAITALL, ( struct sockaddr *) &cliaddr,
-				&len);
-	buffer[n] = '\0';
-	printf("Client : %s\n", buffer);
-	sendto(sockfd, (const char *)hello, strlen(hello),
-		0, (const struct sockaddr *) &cliaddr,
-			len);
-    current_val = std::atof(buffer);
-    }
+	len = sizeof(cliaddr); //len is value/result
+	
 }
+
+double PiModule::update_pi() {
+	int n;
+	socklen_t len;
+	const char *hello = "Hello from server";
+
+	n = recvfrom(sockfd_g, (char *)buffer_g, MAXLINE,
+				MSG_WAITALL, ( struct sockaddr *) &cliaddr_g,
+				&len);
+	buffer_g[n] = '\0';
+	printf("Client : %s\n", buffer_g);
+	//sendto(sockfd_g, (const char *)hello, strlen(hello), 0, (const struct sockaddr *) &cliaddr_g, len);
+    current_val = std::atof(buffer_g);
+	frc::SmartDashboard::PutNumber(buffer_g, 0);
+    }
 
 double PiModule::get_distance() { return current_val; }
